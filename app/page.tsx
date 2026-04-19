@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation';
 import { createServer } from '@/lib/supabase-server';
 import MindBuffer from '@/components/MindBuffer';
 import type { Entry, Digest } from '@/lib/types';
@@ -8,7 +7,16 @@ export const dynamic = 'force-dynamic';
 export default async function HomePage() {
   const supabase = await createServer();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/login');
+  if (!user) {
+    return (
+      <MindBuffer
+        initialEntries={[]}
+        initialDigests={[]}
+        userEmail=""
+        hasCloudAccount={false}
+      />
+    );
+  }
 
   const [entriesRes, digestsRes] = await Promise.all([
     supabase
@@ -30,6 +38,7 @@ export default async function HomePage() {
       initialEntries={(entriesRes.data as Entry[]) || []}
       initialDigests={(digestsRes.data as Digest[]) || []}
       userEmail={user.email || ''}
+      hasCloudAccount
     />
   );
 }

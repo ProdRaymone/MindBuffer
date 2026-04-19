@@ -29,10 +29,11 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
 
   const path = request.nextUrl.pathname;
+  const isPublicHome = path === '/';
   const isAuthPath = path.startsWith('/login') || path.startsWith('/auth');
   const isPublicApi = path.startsWith('/api/agent-pull'); // uses token auth
 
-  if (!user && !isAuthPath && !isPublicApi && !path.startsWith('/_next') && path !== '/manifest.json' && path !== '/sw.js') {
+  if (!user && !isPublicHome && !isAuthPath && !isPublicApi && !path.startsWith('/_next') && path !== '/manifest.json' && path !== '/sw.js') {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
     return NextResponse.redirect(url);

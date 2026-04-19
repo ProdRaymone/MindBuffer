@@ -70,6 +70,29 @@ export type Entry = {
   updated_at: string;
 };
 
+export type EntrySyncState = 'synced' | 'local-only' | 'syncing' | 'failed';
+
+export type LocalEntryDraft = {
+  local_id: string;
+  text: string | null;
+  category: string;
+  tags: string[];
+  attachments: Attachment[];
+  source: string;
+  created_at: string;
+  updated_at: string;
+  sync_state: Exclude<EntrySyncState, 'synced'>;
+  last_error?: string | null;
+};
+
+export type ClientEntry = Entry & {
+  client_id: string;
+  sync_state: EntrySyncState;
+  is_local: boolean;
+  local_id?: string;
+  last_error?: string | null;
+};
+
 export type Digest = {
   id: string;
   user_id: string;

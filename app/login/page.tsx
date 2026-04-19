@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { createBrowser } from '@/lib/supabase';
 import { Loader2 } from 'lucide-react';
+import { createBrowser } from '@/lib/supabase';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -13,6 +13,7 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
+
     setLoading(true);
     setError(null);
 
@@ -40,18 +41,26 @@ export default function LoginPage() {
           <div className="font-mono text-[10px] tracking-[0.2em] uppercase text-[#5a5855]">
             MindBuffer
           </div>
+          <p className="mt-4 text-sm leading-relaxed text-[#8e8c87]">
+            应用现在支持先本地记录。
+            <br />
+            登录的作用是把内容同步到云端，而不是阻塞你先记下来。
+          </p>
         </div>
 
         {sent ? (
           <div className="border border-[#26262a] rounded-xl p-6 bg-[#141416] text-center">
             <div className="font-serif text-base mb-2">检查你的邮箱</div>
             <div className="text-sm text-[#8e8c87] leading-relaxed">
-              已发送登录链接到 <span className="text-[#e8e6e1]">{email}</span>
+              登录链接已经发送到 <span className="text-[#e8e6e1]">{email}</span>
               <br />
-              点击邮件里的链接即可进入。
+              点开邮件里的链接后，就能把本地记录同步到账号。
             </div>
             <button
-              onClick={() => { setSent(false); setEmail(''); }}
+              onClick={() => {
+                setSent(false);
+                setEmail('');
+              }}
               className="mt-4 text-xs text-[#e8b85c] hover:underline"
             >
               换个邮箱
@@ -76,14 +85,14 @@ export default function LoginPage() {
               {loading ? <Loader2 size={14} className="animate-spin" /> : null}
               发送登录链接
             </button>
-            {error && (
+            {error ? (
               <div className="text-xs text-[#c78b8b] text-center">{error}</div>
-            )}
+            ) : null}
           </form>
         )}
 
         <div className="mt-10 text-center text-[11px] text-[#5a5855] font-mono tracking-wider">
-          MAGIC LINK · NO PASSWORDS
+          LOCAL-FIRST · CLOUD SYNC
         </div>
       </div>
     </div>
